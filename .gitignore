@@ -1,3 +1,3 @@
-venve*
-vscode*
-
+.venv*
+.vscode*
+*.exe
