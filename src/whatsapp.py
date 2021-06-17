@@ -26,7 +26,7 @@ def msg():
     )
     searchbox.clear()
     time.sleep(2)
-    pyperclip.copy(message_text)
+    pyperclip.copy(receipent)
     searchbox.send_keys(Keys.CONTROL+'v')
     time.sleep(2)
 
@@ -43,6 +43,6 @@ def msg():
        text_box.send_keys(message_text)
        driver.find_element_by_class_name(sendbutton_classname).click()
 
-time.sleep(20)
+#time.sleep(20)
 
 msg()
