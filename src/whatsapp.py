@@ -1,3 +1,9 @@
+"""
+This script was used to learn about the different ways of implementation.
+Can be entirely excluded and ignored.
+
+"""
+
 import time
 import pyperclip
 from functools import singledispatch
@@ -16,13 +22,15 @@ receipent = "WA test"
 message_count = 1
 textbox_classname = '_2A8P4'  # classname of textbox obtained from inspecting Elements
 sendbutton_classname = '_1E0Oz'  # classname of sendbutton
-searchbox_xpath='//div[@contenteditable="true"][@data-tab="3"]' #classname of searchbox
-chat_xpath=f'//span[@title="{receipent}"]'
+# classname of searchbox
+searchbox_xpath = '//div[@contenteditable="true"][@data-tab="3"]'
+chat_xpath = f'//span[@title="{receipent}"]'
+
 
 def msg():
-    #find searchbox
+    # find searchbox
     searchbox = WebDriverWait(driver, 100).until(
-        EC.presence_of_element_located((By.XPATH,searchbox_xpath))
+        EC.presence_of_element_located((By.XPATH, searchbox_xpath))
     )
     searchbox.clear()
     time.sleep(2)
@@ -31,19 +39,20 @@ def msg():
     time.sleep(2)
 
     # find the receipent
-    chat=driver.find_element_by_xpath(chat_xpath)
+    chat = driver.find_element_by_xpath(chat_xpath)
     chat.click()
     # user = driver.find_element_by_xpath(
     #     '//span[@title = "{}"]'.format(receipent))
     # user.click()
     text_box = driver.find_element_by_class_name(textbox_classname)
-    
-    #Sending
-    for i in range(message_count):
-       text_box.send_keys(message_text)
-       driver.find_element_by_class_name(sendbutton_classname).click()
 
-#time.sleep(20)
+    # Sending
+    for i in range(message_count):
+        text_box.send_keys(message_text)
+        driver.find_element_by_class_name(sendbutton_classname).click()
+
+# time.sleep(20)
+
 
 msg()
 driver.close()
