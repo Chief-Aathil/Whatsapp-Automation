@@ -4,7 +4,7 @@
 # locate the chat, input text field and send the message
 # iterate through all messages
 
-
+import logging
 from datetime import datetime
 import json
 import time
@@ -15,13 +15,40 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 
-
+# use inspect element to check if the given values have changed.
+# it has been found to have changed causing 'element not found' errors
+# 'data-tab' value corresponds to the number of Tab key presses required to navigate to the element 
 searchbox_xpath = '//div[@contenteditable="true"][@data-tab="3"]'
-input_textbox_xpath = '//div[@tabindex="-1"]'
+input_textbox_xpath = '//div[@contenteditable="true"][@data-tab="6"]' 
 input_textbox_classname='_2A8P4'
+sendbutton_classname='_1E0Oz'
+sendbutton_xpath='//button[@class="_1E0Oz"]'
+
 webdriver_path = "chromedriver.exe"
 input_file = "input.json"
+log_file='Logs.log'
 
+
+
+#setting up logging
+open(log_file,'w').close() # to clear the contents. Comment this out to preserve previous logs.
+logging.basicConfig(filename='.\Logs.log',encoding='utf-8', level=logging.DEBUG)
+
+# get msg list from "input.json"
+with open(input_file, 'r', encoding='utf-8') as file:
+    input_list = json.load(file)
+    file.close()
+    logging.info(f"{input_file} read successfully\n")
+
+
+# Load web.whatsapp.com and authenticate
+driver = webdriver.Chrome(webdriver_path)
+driver.get("https://web.whatsapp.com")
+logging.info("webdriver loaded")
+logging.info("loaded web.whatsapp.com")
+# TODO: Log here
+
+ 
 def is_past_time(t):
     """Checks if the time is past already"""
     if t < datetime.now():
@@ -43,26 +70,18 @@ def send_message(target_chat, msg):
     time.sleep(2)
     chat = driver.find_element_by_xpath(chat_xpath)
     chat.click()
-    input_textbox = driver.find_element_by_class_name(input_textbox_classname)
+    input_textbox=driver.find_element_by_xpath(input_textbox_xpath)
+    # input_textbox = driver.find_element_by_class_name(input_textbox_classname)
     pyperclip.copy(msg)
     input_textbox.send_keys(Keys.CONTROL+'v')
+    #driver.find_element_by_class_name(sendbutton_classname).click()
+    #driver.find_element_by_xpath(sendbutton_xpath).click()
     input_textbox.send_keys(Keys.ENTER)
-    # TODO: Log here
-
+   
 
 ###############################################
 
 
-# get msg list from "input.json"
-with open(input_file, 'r', encoding='utf-8') as file:
-    input_list = json.load(file)
-    file.close()
-# TODO: Log here
-
-# Load web.whatsapp.com and authenticate
-driver = webdriver.Chrome(webdriver_path)
-driver.get("https://web.whatsapp.com")
-# TODO: Log here
 
 
 for message_data in input_list:
@@ -72,12 +91,16 @@ for message_data in input_list:
     message_data[2]=datetime.strptime(message_data[2],"%Y-%m-%d %H:%M:%S")
     # wait till time reached
     if is_past_time(message_data[2]) == True:
-        raise ValueError("Given time is in the past")
-        # TODO: Log here
+        err_str = f"Given time is in the past. Time:{message_data[2]}"
+        logging.warning(err_str)
+        raise ValueError(err_str)
+        
     else:
         while(is_past_time(message_data[2]) == False):
             pass
         send_message(message_data[0], message_data[1])
-
-
+        info_str=f"Message sent. To:{message_data[0]} . Time:{message_data[2]} . Content:{message_data[1]}"
+        logging.info(info_str)
+    
+driver.close()
 
