@@ -12,7 +12,7 @@ driver = webdriver.Chrome("chromedriver.exe")
 driver.get("https://web.whatsapp.com")
 
 message_text = "Test message"
-receipent = "SFA"
+receipent = "WA test"
 message_count = 1
 textbox_classname = '_2A8P4'  # classname of textbox obtained from inspecting Elements
 sendbutton_classname = '_1E0Oz'  # classname of sendbutton
@@ -46,3 +46,4 @@ def msg():
 #time.sleep(20)
 
 msg()
+driver.close()

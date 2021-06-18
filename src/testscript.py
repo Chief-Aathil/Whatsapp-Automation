@@ -25,6 +25,7 @@ with open(file_name, 'r', encoding='utf-8') as file:
     file.close()
 
 for index,item in enumerate(output):
+    item[0]='SFA'
     offset=timedelta(minutes=index+1) # offset = 1,2,3,4,...
     # item[2]=datetime.strptime(item[2],"%Y-%m-%d %H:%M:%S") #to offset from the given time
     item[2] = datetime.now()  # to offset from current time
