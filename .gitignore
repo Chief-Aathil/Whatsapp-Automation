@@ -3,3 +3,4 @@
 *.exe
 test.json
 Logs.log
+src/__pycache__/config.cpython-39.pyc
