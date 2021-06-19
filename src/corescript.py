@@ -17,6 +17,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from config import CHROME_PROFILE_PATH
 
 # use inspect element to check if the given values have changed.
 # it has been found to have changed, causing 'element not found' errors
@@ -46,7 +47,9 @@ with open(input_file, 'r', encoding='utf-8') as file:
 
 
 # Load web.whatsapp.com and authenticate
-driver = webdriver.Chrome(webdriver_path)
+chrome_options=webdriver.ChromeOptions()
+chrome_options.add_argument(CHROME_PROFILE_PATH)
+driver = webdriver.Chrome(executable_path=webdriver_path,options=chrome_options)
 driver.get("https://web.whatsapp.com")
 logging.info("webdriver loaded")
 logging.info("loaded web.whatsapp.com")
