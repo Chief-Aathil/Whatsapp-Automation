@@ -11,6 +11,7 @@ import logging
 from datetime import datetime
 import json
 import time
+import os
 import pyperclip
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -34,8 +35,7 @@ log_file = 'Logs.log'
 
 
 # setting up logging
-# to clear the contents. Comment this out to preserve previous logs.
-open(log_file, 'w').close()
+# TODO: Setup format including time.
 logging.basicConfig(filename='.\Logs.log',
                     encoding='utf-8', level=logging.DEBUG)
 
@@ -48,12 +48,16 @@ with open(input_file, 'r', encoding='utf-8') as file:
 
 # Load web.whatsapp.com and authenticate
 chrome_options=webdriver.ChromeOptions()
+chrome_options.binary_location=os.environ.get("GOOGLE_CHROME_BIN")
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument(CHROME_PROFILE_PATH)
-driver = webdriver.Chrome(executable_path=webdriver_path,options=chrome_options)
+driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"),options=chrome_options)
 driver.get("https://web.whatsapp.com")
 logging.info("webdriver loaded")
 logging.info("loaded web.whatsapp.com")
-# TODO: Log here
+
 
 
 def is_past_time(t):
